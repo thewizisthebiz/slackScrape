@@ -1,0 +1,183 @@
+function doPost(request) {
+
+
+  // Most of this code has been lifted from http://jd.mares.co/tutorials/2015/09/20/slack-google-apps-script-stand-ups.html
+
+  // I just tried to simplify it and explain it for the purposes of helping compost haulers report and analyze their pickups automagically
+
+
+
+  // The first thing we want to do is create a bucket data to hold the info/attributes of our google Sheet.
+
+  // Let's call this bucket "sheets" 
+
+
+
+  var sheets = SpreadsheetApp.openById('asdfjkl;1234567890qwertyuiop');
+
+
+
+  // The sheet you are putting into your bucket is determined by whichever Sheet ID you paste between the single-quotes. 
+
+  // Your Sheet ID is the garbled sequence of characters at the end of your sheet's URL. 
+
+  // Example: if your Sheet URL is https://docs.google.com/spreadsheets/d/asdfjkl;1234567890qwertyuiop, then you just paste: asdfjkl;1234567890qwertyuiop
+
+  // Make sure you've got your single-quotes still around your ID.
+
+  
+
+
+
+  // Now, let's create a bucket of data that we can fill and refill each time you post to Slack in your specified channel, or using your specified trigger word.
+
+
+
+  var params = request.parameters;
+ 
+
+
+  // Remember: you can configure your channel and keywords when you setup your Slack webhooks through: myCoolTeam.slack.com/apps/manage/custom-integrations
+
+
+
+
+
+  // Okay, so we have a bucket that has info about our google sheet, and a bucket that can hold our slack messages
+
+  // Next, we can make a bucket which will contain the number for whatever the FIRST blank row in our sheet. This way we we won't overwrite our old data each time we post to slack.
+
+
+
+  var nextRow = getNextRow(sheets) + 1;
+
+
+
+
+
+  // Now we are getting to the good stuff.
+
+  // This next line is basically a key that gives your program access to your Slack message
+
+
+
+  if (params.token == "paste_Slack_token_here,_keep_the_quote_ marks") {
+
+
+
+
+
+    // Then we want to make a bucket of data that can hold the TEXT of our Slack message.
+ 
+    // And we want that data to get filtered so that the trigger word and punctuation are sifted out.
+
+    // Here we are using the word "pickup" and ":" to start the message, so that's what we will filter out.
+
+
+
+    var rawSlackMessage = String(params.text).replace(/^\s*pickup\s*:*\s*/gi,'');
+    
+
+
+
+
+    // Next we need to break the contents of our Slack messages apart so that each piece can be placed into it's own bucket.
+
+    // Eventually that bucket will get dumped into a specific cell on your google sheet.
+
+    // Below we are using a semi-colon ";" to delineate where your Slack message should be split up.
+
+
+
+    var piecesOfSlackMessage = rawSlackMessage.split(/\s*;\s*/g);
+
+
+
+
+
+    // HEADS UP: when computers keep lists they start with 0, not 1. 
+
+    //So, you wouldn't say the first thing in a list is in slot 1, you would say the first thing in a list is in slot ZERO. Computers are dumb.
+
+    // The following lines create buckets for each piece of your Slack message and fill it with the corresponding piece of your Slack message.
+
+
+
+    var client         = piecesOfSlackMessage[0] || "Whoops, no client provided";
+    var weight         = piecesOfSlackMessage[1] || "Dang, no weight provided";
+    var containerCount = piecesOfSlackMessage[2] || "Oopsies, no container count provided";
+    var containerType  = piecesOfSlackMessage[3] || "Hmmm... no container type provided";
+
+
+
+    //In our example case, the initial piece of information in our Slack message is always the client, so we made a bucket called "client" and filled it with the piece of our Slack message in slot 0.
+
+    //The weight of our pickup always comes after the client, so we made a bucket called "weight" and filled that bucket with the piece of our Slack message in slot 1.
+
+    // You might have more or fewer buckets, depending on how many things you want to track.
+
+
+
+
+
+    // Here's where the magic happens. These next lines tell the program to...
+
+    // Go to our google sheet...
+    // and find a column with a certain name...
+    // and go to the bottom of that column...
+    // and fill the last cell in that column with meta-data from our Slack message
+
+
+
+    sheets.getRangeByName('date').getCell(nextRow,1).setValue(new Date());
+    sheets.getRangeByName('user').getCell(nextRow,1).setValue(params.user_name);
+    sheets.getRangeByName('time').getCell(nextRow,1).setValue(new Date());
+    sheets.getRangeByName('timestamp').getCell(nextRow,1).setValue(params.timestamp);
+
+
+
+    // This meta-data isn't stuff we type into Slack, it just comes automatically. 
+
+    // For instance: the time we sent a message, or the username of the person who sent the message.
+
+    // Notice we use the Date more than once because we like to keep track of the DAY (Wednesday) and the the TIME (12:01 PM) separately in our Sheet.
+
+
+
+
+
+    // Next, we want to go to our google sheet...
+    // and find a column with a certain name...
+    // and go to the bottom of that column...
+    // and dump the contents of the bucket that shares the name of the column.
+
+    // So, dump the "client" bucket at the bottom of the "client" row in our Sheet
+
+    sheets.getRangeByName('client').getCell(nextRow,1).setValue(client);
+    sheets.getRangeByName('weight').getCell(nextRow,1).setValue(weight);
+    sheets.getRangeByName('containerCount').getCell(nextRow,1).setValue(containerCount);
+    sheets.getRangeByName('containerType').getCell(nextRow,1).setValue(containerType);
+
+}
+
+    // That's basically it!
+
+
+
+
+    // This is a routine that your program uses to go to the next row, so it doesn't overwrite data.
+
+function getNextRow(sheets) {
+  var timestamps = sheets.getRangeByName("timestamp").getValues();
+  for (i in timestamps) {
+    if(timestamps[i][0] == "") {
+      return Number(i);
+      break;
+    }
+  }
+}
+}
+
+
+
+    // That's all folks.

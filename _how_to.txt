@@ -1,0 +1,124 @@
+Image 1.
+Setup columns in your Google Sheet for each piece of data you want to track.
+
+
+
+Image 2.
+Select 'Named Ranges' from the 'Data' menu in the Google Sheets menu bar.
+
+
+
+Image 3.
+Select the LETTER for each column you want to make into a named range, then click 'Add a range' at the top of the 'Named Ranges' sidebar.
+
+Keep your names simple, short and free of spaces.
+
+
+
+Image 4.
+When you are finished creating your named ranges, select 'Script Editor' from the 'Tools' menu in the Google Sheets menu bar.
+
+
+
+Image 5.
+Copy and paste the entire contents of the "scrapeSlack_dumpToGoogleSheets_script.txt" file into the Script Editor window.
+
+
+
+Image 6.
+Return to your Google Sheet. Highlight and copy the end of the sheets URL—this is your Sheet ID, it will be a long, garbled string of characters.
+
+If there are any slashes at the end, like "/edit", ignore those portions.
+
+Return to the Script Editor window and paste your sheet ID into the script where instructed.
+
+
+
+Image 7.
+Now go to your slack teams URL, followed by "/apps". 
+
+Example: CoolAwesomeTeam.slack.com/apps
+
+Select "Build" from the top right menu
+
+
+
+Image 8.
+Select "Custom Integration"
+
+
+
+Image 9.
+Select "Outgoing Webhooks"
+
+
+
+Image 10.
+Select "Add Outgoing Webhooks Integration"
+
+
+
+Image 11.
+Fill out your integration settings as necessary.
+
+Leave the URL(s) blank for now.
+
+Copy the token out of the text field. 
+
+
+
+Image 12.
+Return to your script editor window.
+
+Paste your Slack token where instructed.
+
+
+
+Image 13.
+Select "Publish" from the menu bar of your script editor window.
+
+Then select "Deploy as web app"
+
+Be sure to set the version to "New"
+
+
+
+Image 14.
+Be sure to set "Execute App as" to: "Me"
+
+And set "Who Has Access to this App" to: "Anyone, even anonymous".
+
+Select the blue Deploy or Update button at the bottom
+
+
+
+Image 15.
+Copy the URL from the Deploy as Web App field, then select OK.
+
+
+
+Image 16.
+Return to your Slack Integration Settings and paste the web app URL you just copied into the URL(s) field that we left blank earlier.
+
+
+
+Image 17.
+Send a test message on the slack channel you have added your integration to.
+
+
+
+Image 18.
+You should see your data come through into your google sheet moments after you send your slack message.
+
+
+
+Enjoy.
+questions? @jkruszyn
+
+
+
+
+
+
+
+
