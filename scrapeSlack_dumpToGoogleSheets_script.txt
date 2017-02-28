@@ -136,13 +136,13 @@ function doPost(request) {
 
 
 
-    // This meta-data isn't stuff we type into Slack, it just comes automatically. 
-
+    // This meta-data isn't stuff we type into Slack, it just comes automatically.
+    
     // For instance: the time we sent a message, or the username of the person who sent the message.
 
     // Notice we use the Date more than once because we like to keep track of the DAY (Wednesday) and the the TIME (12:01 PM) separately in our Sheet.
 
-
+    // If you don't want this info in your sheet, simply remove the above four lines of code and don't include named ranges in your Google sheet for these pieces of data... although it's pretty useful stuff :)
 
 
 
