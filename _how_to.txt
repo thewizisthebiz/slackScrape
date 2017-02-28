@@ -11,6 +11,8 @@ Select 'Named Ranges' from the 'Data' menu in the Google Sheets menu bar.
 Image 3.
 Select the LETTER for each column you want to make into a named range, then click 'Add a range' at the top of the 'Named Ranges' sidebar.
 
+The included google script accounts for columns for username, date and time, so if you want those things include named ranges for them.
+
 Keep your names simple, short and free of spaces.
 
 
@@ -104,6 +106,7 @@ Return to your Slack Integration Settings and paste the web app URL you just cop
 
 Image 17.
 Send a test message on the slack channel you have added your integration to.
+Remember: use the trigger-word as defined in your Slack WebHooks settings.
 
 
 
